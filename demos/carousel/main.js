@@ -2,7 +2,7 @@ window.onload = function () {
   let prev = document.querySelector('#prev')
   let next = document.querySelector('#next')
   let list = document.querySelector('.list')
-  console.log(list,'list')
+  console.log(list, 'list')
   let buttons = document.querySelector('.buttons').getElementsByTagName('span')
   let container = document.querySelector('.container')
   let index = 1
@@ -44,20 +44,22 @@ window.onload = function () {
     go()
   }
 
-  for(let i=0,len=buttons.length;i<len;i++){
-    buttons[i].onclick=function (){
-      if(this.className==='on'){
+  for (let i = 0, len = buttons.length; i < len; i++) {
+    buttons[i].onclick = function () {
+      if (this.className === 'on') {
         return
       }
-      let myIndex=parseInt(this.getAttribute('index'))
-      let offset=-600*(myIndex-index)
-      if(!animated){
+      let myIndex = parseInt(this.getAttribute('index'))
+      let offset = -600 * (myIndex - index)
+      if (!animated) {
         animate(offset)
       }
-      index=myIndex
+      index = myIndex
       shownButton()
     }
   }
+
+  // function ()
 
   prev.onclick = function () {
     if (!animated) {
