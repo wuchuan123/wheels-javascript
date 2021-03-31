@@ -13,7 +13,6 @@
     this.__event = {};
   }
   EventEmitter.prototype.on = function (eventName, listener) {
-      console.log(listener,'listen')
     if (!eventName || !listener) return;
     if (!dom.isValidListener(listener)) {
       throw new TypeError("listener must be a function");
@@ -70,8 +69,8 @@
   };
 
   function ProgressIndicator(options) {
-      console.log(options,'options')
     this.options = Object.assign({}, this.constructor.defaultOptions, options);
+    console.log(options,'options')
     this.handlers = {};
     this.init();
   }
@@ -87,6 +86,7 @@
     this.bindScrollEvent();
   };
   proto.createIndicator = function () {
+
     let div = document.createElement("div");
     div.id = "progress-indicator";
     div.className = "progress-indicator";
@@ -109,20 +109,23 @@
     return this.sHeight ? scrollTop / this.sHeight : 0;
   };
   proto.setWidth = function (perc) {
-    this.element.style.width = perc * 100 + "100%";
+    this.element.style.width = perc * 100 + "%";
   };
   proto.bindScrollEvent = function () {
     let self = this;
     let prev;
-    window.requestAnimationFrame(function () {
-      let perc = Math.min(util.getScrollOffsetsTop() / self.sHeight, 1);
-      if ((perc = prev)) return;
-      if (prev && perc == 1) {
-        self.emit("end");
-      }
-      prev = perc;
-      self.setWidth(perc);
-    });
+    dom.addEvent(window,'scroll',function (){
+      window.requestAnimationFrame(function () {
+        let perc = Math.min(util.getScrollOffsetsTop() / self.sHeight, 1);
+        if (perc === prev) return;
+        if (prev && perc === 1) {
+          self.emit("end");
+        }
+        prev = perc;
+        self.setWidth(perc);
+      });
+    })
+
   };
   window.ProgressIndicator=ProgressIndicator
 })();

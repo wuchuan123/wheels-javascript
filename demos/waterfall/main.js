@@ -4,7 +4,6 @@
   }
 
   EventEmitter.prototype.on = function (eventName, listener) {
-    console.log('on')
     if (!eventName || !listener) return
     if (!dom.isValidListener(listener)) {
       throw new Error('listener must be a function')
@@ -13,7 +12,7 @@
     let listeners = (events[eventName] = events[eventName] || [])
     let listenerIsWrapped = typeof listener === 'object'
 
-    if (dom.indexOf(listeners, listener) === -1) {
+    if (listeners.indexOf(listener) === -1) {
       listeners.push(
         listenerIsWrapped ? listener : {listener: listener, once: false}
       )
@@ -55,7 +54,7 @@
 
   function WaterFall(opts) {
     EventEmitter.call(this)
-    this.opts = dom.extend({}, this.constructor.defaultopts, opts)
+    this.opts = Object.assign({}, this.constructor.defaultopts, opts)
     this._container = typeof this.opts.container === 'string' ? document.querySelector(this.opts.container) : this.opts.container
     this._pins = typeof this.opts.pins === "string" ? document.querySelectorAll(this.opts.pins) : this.opts.pins
     this._loader = typeof this.opts.loader === 'string' ? document.querySelector(this.opts.loader) : this.opts.loader
@@ -108,7 +107,6 @@
   proto.appendPins = function () {
     if (load) return
     load = true
-    console.log(this._loader,'_loader')
     if (this._loader) {
       this._loader.style.display = 'block'
       this._loader.style.top = this.getMax() + 50 + 'px'
@@ -155,7 +153,7 @@
   proto.isReadyAppend = function (fragment) {
     let self = this
     let checkAllHaveHeight = function () {
-      if (dom.indexOf(self._checkResult, false) === -1) {
+      if (self._checkResult.indexOf(false) === -1) {
         self._container.appendChild(fragment)
         load = false
         if (self._loader) {
@@ -172,7 +170,7 @@
   proto.setPosition = function (pins) {
     for (let i = 0, len = pins.length; i < len; i++) {
       let min = this.getMin()
-      let index = dom.indexOf(this._columnHeightArr, min)
+      let index = this._columnHeightArr.indexOf(min)
       pins[i].style.left = this._unitWidth * index + 'px'
       pins[i].style.top = min + 'px'
       this._columnHeightArr[index] += pins[i].offsetHeight + this.opts.gapHeight
